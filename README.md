@@ -293,7 +293,7 @@ The following are some sample projects created based on the above documentation.
 
 | # | Name | Action |
 |---|---|---|
-| 1 | Socket Connection | [Go to code]() |
-| 2 | Socket Messaging | [Go to code]() |
-| 3 | Chat | [Go to code]() |
-| 4 | Chat with UI | [Go to code]() |
+| 1 | Socket Connection | [Go to code](https://github.com/jothomas1996/networking-with-python/tree/main/socket) |
+| 2 | Socket Messaging | [Go to code](https://github.com/jothomas1996/networking-with-python/tree/main/socket_message) |
+| 3 | Chat | [Go to code](https://github.com/jothomas1996/networking-with-python/tree/main/chat_cmd) |
+| 4 | Chat with UI | [Go to code](https://github.com/jothomas1996/networking-with-python/tree/main/chat_ui) |
