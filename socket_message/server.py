@@ -11,3 +11,4 @@ s.listen(4)
 while True:
 	client, address = s.accept()
 	print("Client has connected from the address", address)
+	client.send(bytes("Hello! How are you?", "utf-8"))

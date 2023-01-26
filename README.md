@@ -100,7 +100,191 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 HOST_NAME = socket.gethostname()
 PORT = 12345
 
+s.connect((HOST_NAME, PORT))
+```
+
+- execute the server code first
+- keep the server terminal open
+- open a new terminal and execute the client code
+- now the server terminal will show an output like `Client has connected from the address ('192.168.1.14', 65414)`
+
+## Socket Messaging
+
+- as shown above setup a socket connection and then use the send method to tranfer data
+- string data is transfered as bytes through the send method
+- utf-8 is specified as the character encoding to be used
+
+```
+# server.py
+
+import socket
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+HOST_NAME = socket.gethostname()
+PORT = 12345
+
 s.bind((HOST_NAME, PORT))
+
+s.listen(4)
+
+while True:
+	client_address = s.accept()
+	print("Client has connected from the address", client_address)
+	client.send(bytes("Hello! How are you?", "utf-8"))
+```
+
+```
+# client.py
+
+import socket
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+HOST_NAME = socket.gethostname()
+PORT = 12345
+
+s.connect((HOST_NAME, PORT))
+
+message = s.recv(100)
+print(message.decode("utf-8"))
+```
+
+## Chat (Command Line)
+
+- the below code shows how to build a chat system for server and client
+- each take turns to send a message to the other
+
+```
+# server.py
+
+import socket
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+HOST_NAME = socket.gethostname()
+PORT = 12345
+
+s.bind((HOST_NAME, PORT))
+
+s.listen(4)
+
+print("Server has started")
+
+client, address = s.accept()
+print("Client has connected from the address", address)
+
+while True:
+	server_message = input("Server :: ")
+	client.send(bytes(server_message, "utf-8"))
+	client_message = client.recv(100)
+	print("Client ::", client_message.decode("utf-8"))
+```
+
+```
+# client.py
+
+import socket
+
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+HOST_NAME = socket.gethostname()
+PORT = 12345
+
+server_socket.connect((HOST_NAME, PORT))
+
+while True:
+	server_message = server_socket.recv(100)
+	print("Server ::", server_message.decode("utf-8"))
+	client_message = input("Client :: ")
+	server_socket.send(bytes(client_message, "utf-8"))
+```
+
+## Chat (Tkinter UI)
+
+```
+# server.py
+
+import socket
+from tkinter import *
+
+# user inteface functions
+def send(listbox, entry):
+	message = entry.get()
+	client.send(bytes(message, "utf-8"))
+	listbox.insert('end', "Server :: " + message)
+	entry.delete(0, END)
+
+def recieve(listbox):
+	message = client.recv(100)
+	listbox.insert('end', "Client :: " + message.decode("utf-8"))
+
+# user interface
+root = Tk()
+
+entry = Entry()
+entry.pack(side=BOTTOM)
+listbox = Listbox(root)
+listbox.pack()
+send_button = Button(root, text='send', command=lambda: send(listbox, entry))
+send_button.pack(side=BOTTOM)
+recieve_button = Button(root, text='recieve', command=lambda: recieve(listbox))
+recieve_button.pack(side=BOTTOM)
+
+root.title("Server")
+
+# socket
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+HOST_NAME = socket.gethostname()
+PORT = 12345
+
+s.bind((HOST_NAME, PORT))
+
+s.listen(4)
+
+client, address = s.accept()
+print("Client has connected from the address", address)
+
+# execute UI
+root.mainloop()
+```
+
+```
+# client.py
+
+import socket
+from tkinter import *
+
+# user inteface functions
+def send(listbox, entry):
+	message = entry.get()
+	server_socket.send(bytes(message, "utf-8"))
+	listbox.insert('end', "Client :: " + message)
+	entry.delete(0, END)
+
+def recieve(listbox):
+	message = server_socket.recv(100)
+	listbox.insert('end', "Server :: " + message.decode("utf-8"))
+
+# user interface
+root = Tk()
+
+entry = Entry()
+entry.pack(side=BOTTOM)
+listbox = Listbox(root)
+listbox.pack()
+send_button = Button(root, text='send', command=lambda: send(listbox, entry))
+send_button.pack(side=BOTTOM)
+recieve_button = Button(root, text='recieve', command=lambda: recieve(listbox))
+recieve_button.pack(side=BOTTOM)
+
+root.title("Client")
+
+# socket
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+HOST_NAME = socket.gethostname()
+PORT = 12345
+
+server_socket.connect((HOST_NAME, PORT))
+
+# execute UI
+root.mainloop()
 ```
 
 ## Example Projects
@@ -110,3 +294,6 @@ The following are some sample projects created based on the above documentation.
 | # | Name | Action |
 |---|---|---|
 | 1 | Socket Connection | [Go to code]() |
+| 2 | Socket Messaging | [Go to code]() |
+| 3 | Chat | [Go to code]() |
+| 4 | Chat with UI | [Go to code]() |
